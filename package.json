@@ -6,6 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "db:dev:rm": "docker compose rm db -s -f -v",
+    "db:dev:up": "docker compose up db -d",
+    "db:dev:restart": "npm run db:dev:rm && npm run db:dev:up && sleep 1 && npm run prisma:deploy",
     "build": "nest build",
     "docker:down": "docker compose down",
     "docker:start:dev": "docker compose up --build",
@@ -14,6 +17,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "prisma:generate": "docker compose exec app ./node_modules/.bin/prisma generate",
     "prisma:migrate": "docker compose exec app ./node_modules/.bin/prisma migrate dev",
+    "prisma:deploy": "docker compose exec app ./node_modules/.bin/prisma migrate deploy",
     "prisma:studio": "docker compose exec app ./node_modules/.bin/prisma studio --browser none --port 5555",
     "prisma:validate": "docker compose exec app ./node_modules/.bin/prisma validate",
     "start": "nest start",
@@ -29,6 +33,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@prisma/adapter-pg": "^7.7.0",
