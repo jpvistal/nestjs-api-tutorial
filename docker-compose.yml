@@ -1,0 +1,51 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest-app
+    env_file:
+      - .env.docker
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+    command: npm run start:dev
+    ports:
+      - ${APP_PORT:-3334}:3333
+      - 5555:5555
+    volumes:
+      - .:/usr/src/app
+      - app_node_modules:/usr/src/app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    tty: true
+    stdin_open: true
+    networks:
+      - freecodecamp
+
+  db:
+    image: postgres:16-alpine
+    container_name: nest-db
+    ports:
+      - ${POSTGRES_PORT:-5434}:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: nest
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nest"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - freecodecamp
+
+volumes:
+  app_node_modules:
+  postgres_data:
+
+networks:
+  freecodecamp:

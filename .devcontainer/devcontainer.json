@@ -1,0 +1,30 @@
+{
+  "name": "nestjs-api-tutorial",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "app",
+  "runServices": ["db", "app"],
+  "workspaceFolder": "/usr/src/app",
+  "shutdownAction": "stopCompose",
+  "overrideCommand": false,
+  "postCreateCommand": "./node_modules/.bin/prisma generate",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "Prisma.prisma",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "explicit"
+        },
+        "typescript.suggest.autoImports": true,
+        "javascript.suggest.autoImports": true,
+        "typescript.updateImportsOnFileMove.enabled": "always"
+      }
+    }
+  }
+}
