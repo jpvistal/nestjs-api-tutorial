@@ -13,6 +13,7 @@ services:
     ports:
       - ${APP_PORT:-3334}:3333
       - 5555:5555
+      - 5556:5556
     volumes:
       - .:/usr/src/app
       - app_node_modules:/usr/src/app/node_modules
@@ -42,10 +43,30 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - freecodecamp
+  
+  test-db:
+    image: postgres:16-alpine
+    container_name: nest-db-test
+    ports:
+      - ${POSTGRES_TEST_PORT:-5435}:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: nest
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nest"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    networks:
+      - freecodecamp
 
 volumes:
   app_node_modules:
   postgres_data:
+  postgres_test_data:
 
 networks:
   freecodecamp:

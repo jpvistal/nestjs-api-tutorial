@@ -4,8 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto } from './dto';
 import * as argon from 'argon2';
-import { PrismaClientKnownRequestError } from 'generated/prisma/internal/prismaNamespace';
-import { access } from 'fs';
+import { Prisma } from '../../generated/prisma/client';
 
 @Injectable({})
 export class AuthService {
@@ -33,7 +32,7 @@ export class AuthService {
     } catch (error) {
       if (
         error instanceof 
-        PrismaClientKnownRequestError
+        Prisma.PrismaClientKnownRequestError
       ) {
         if (error.code === 'P2002') {
           throw new ForbiddenException(
